@@ -29,7 +29,7 @@ const ZdDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-[1280px] space-y-5 p-4 sm:p-6 lg:p-8">
-        <Header overallPct={overallPct} onReset={reset} />
+        <Header overallPct={overallPct} state={state} onReset={reset} onImport={importState} />
         <KpiRow totals={{ estimate: totals.estimate, actual: totals.actual, active: totals.active }} />
         <StackedProgress done={totals.done} active={totals.active} planned={totals.planned} />
 
