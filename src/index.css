@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 20% 10%;
+    --foreground: 40 10% 92%;
+
+    --card: 220 18% 13%;
+    --card-foreground: 40 10% 92%;
+
+    --popover: 220 18% 13%;
+    --popover-foreground: 40 10% 92%;
+
+    --primary: 38 92% 50%;
+    --primary-foreground: 220 20% 10%;
+
+    --secondary: 220 16% 18%;
+    --secondary-foreground: 40 10% 85%;
+
+    --muted: 220 14% 16%;
+    --muted-foreground: 220 10% 55%;
+
+    --accent: 38 80% 45%;
+    --accent-foreground: 220 20% 10%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 142 80% 10%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 90% 10%;
+
+    --info: 210 80% 55%;
+    --info-foreground: 210 90% 10%;
+
+    --border: 220 14% 20%;
+    --input: 220 14% 20%;
+    --ring: 38 92% 50%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 220 20% 8%;
+    --sidebar-foreground: 40 10% 85%;
+    --sidebar-primary: 38 92% 50%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 220 16% 15%;
+    --sidebar-accent-foreground: 40 10% 85%;
+    --sidebar-border: 220 14% 18%;
+    --sidebar-ring: 38 92% 50%;
+
+    --chart-1: 38 92% 50%;
+    --chart-2: 210 80% 55%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 0 72% 51%;
+    --chart-5: 280 65% 60%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(38 92% 50%), hsl(28 90% 45%));
+    --gradient-card: linear-gradient(145deg, hsl(220 18% 14%), hsl(220 18% 11%));
+    --shadow-glow: 0 0 20px hsl(38 92% 50% / 0.15);
+    --shadow-card: 0 4px 24px hsl(220 40% 2% / 0.5);
+  }
+
+  .dark {
+    /* Same as root - dark by default */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  .kpi-card {
+    @apply relative overflow-hidden rounded-xl border border-border bg-card p-5;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s ease;
+  }
+
+  .kpi-card:hover {
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .kpi-card:hover::before {
+    opacity: 1;
+  }
+
+  .section-title {
+    @apply text-xs font-semibold uppercase tracking-widest text-muted-foreground;
+  }
+
+  .value-large {
+    @apply text-3xl font-bold tracking-tight;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .chart-container {
+    @apply rounded-xl border border-border bg-card p-5;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .progress-bar {
+    @apply h-2 w-full rounded-full bg-secondary overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    @apply h-full rounded-full transition-all duration-700 ease-out;
+    background: var(--gradient-primary);
+  }
+
+  .status-dot {
+    @apply h-2 w-2 rounded-full;
+  }
+
+  .status-dot-success {
+    @apply bg-[hsl(var(--success))];
+    box-shadow: 0 0 6px hsl(var(--success) / 0.5);
+  }
+
+  .status-dot-warning {
+    @apply bg-[hsl(var(--warning))];
+    box-shadow: 0 0 6px hsl(var(--warning) / 0.5);
+  }
+
+  .status-dot-danger {
+    @apply bg-destructive;
+    box-shadow: 0 0 6px hsl(var(--destructive) / 0.5);
+  }
+
+  .badge-status {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+}
