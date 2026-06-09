@@ -31,5 +31,13 @@ export const useZdState = () => {
 
   const reset = useCallback(() => setState(SEED), []);
 
-  return { state, updateCell, reset };
+  const importState = useCallback((data: unknown): boolean => {
+    const d = data as Partial<ZdState> | null;
+    if (!d || typeof d !== "object") return false;
+    if (!Array.isArray(d.objects) || !Array.isArray(d.trades) || !d.cells || !Array.isArray(d.phases)) return false;
+    setState(d as ZdState);
+    return true;
+  }, []);
+
+  return { state, updateCell, reset, importState };
 };
