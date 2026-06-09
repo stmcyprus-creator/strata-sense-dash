@@ -51,12 +51,13 @@ const TimelineTab = ({ state }: { state: ZdState }) => {
                   <div
                     className={`pointer-events-none absolute top-1 h-7 rounded-md ${isActive ? "ring-1 ring-white/70" : ""}`}
                     style={{
-                      left: `calc(220px + ${(p.startMonth / cols) * 100}% * ${cols} / ${cols})`,
+                      left: `calc(220px + (100% - 220px) * ${p.startMonth} / ${cols})`,
                       width: `calc((100% - 220px) * ${span} / ${cols})`,
                       background: t?.color ?? "hsl(var(--primary))",
                       opacity: isPlanned ? 0.45 : 1,
                     }}
                   >
+
                     <div className="flex h-full items-center px-2 text-[11px] font-semibold text-white/95 mix-blend-normal">
                       {p.status === "done" ? "Завершено" : p.status === "active" ? "В работе" : "Запланировано"}
                     </div>
