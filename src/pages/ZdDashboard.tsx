@@ -9,7 +9,7 @@ import BudgetTab from "@/components/zd/BudgetTab";
 import TimelineTab from "@/components/zd/TimelineTab";
 
 const ZdDashboard = () => {
-  const { state, updateCell, reset } = useZdState();
+  const { state, updateCell, reset, importState } = useZdState();
 
   const totals = useMemo(() => {
     let estimate = 0, actual = 0, active = 0, done = 0, planned = 0;
