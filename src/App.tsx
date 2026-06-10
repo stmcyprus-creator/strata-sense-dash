@@ -21,7 +21,8 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </PasswordGate>
-      </Toaster>
+      </BrowserRouter>
+
     </TooltipProvider>
   </QueryClientProvider>
 );
