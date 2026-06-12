@@ -116,7 +116,11 @@ async function fetchFromApi(): Promise<DashboardResult | null> {
     return {
       data: needsMap
         ? { works: mapWorks(rawWorks), estimates: mapEstimates(rawEst), problems: mapProblems(rawProb) }
-        : { works: rawWorks as unknown as WorkRow[], estimates: rawEst as unknown as EstimateRow[], problems: rawProb as unknown as ProblemRow[] },
+        : {
+            works: rawWorks as unknown as WorkRow[],
+            estimates: rawEst as unknown as EstimateRow[],
+            problems: rawProb as unknown as ProblemRow[],
+          },
       offline: false,
       source: "api",
       fetchedAt: new Date(),
