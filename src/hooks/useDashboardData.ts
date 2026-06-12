@@ -73,9 +73,11 @@ async function fetchCsv(url: string): Promise<Record<string, string>[]> {
   return parseCSV(await res.text());
 }
 
-const SHEET_ID = "1h4H8k-1hidOoo1bguKHoZ-zFeWUZnVf6ST4RNaiY2YM";
+// "Опубликованная в интернете" версия таблицы — отдаёт CSV из браузера без CORS-проблем.
+const PUB_ID =
+  "2PACX-1vSpybS3IXlYs_bxcntEic9dYbXvctoqCTSLRI2bWnPd3rYJrnZ0LVPkaE9rn8FocpP0zGZ5vMJaHIA8";
 const csvUrl = (gid: string) =>
-  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`;
+  `https://docs.google.com/spreadsheets/d/e/${PUB_ID}/pub?gid=${gid}&single=true&output=csv`;
 
 async function fetchFromSheets(): Promise<DashboardResult | null> {
   const worksUrl =
