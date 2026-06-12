@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
-import PasswordGate from "./components/PasswordGate";
+import PinGate from "./components/PinGate";
 
 const queryClient = new QueryClient();
 
@@ -15,12 +15,12 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <PasswordGate>
+        <PinGate>
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </PasswordGate>
+        </PinGate>
       </BrowserRouter>
 
     </TooltipProvider>
