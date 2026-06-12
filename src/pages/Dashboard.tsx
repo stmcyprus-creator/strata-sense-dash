@@ -2,7 +2,8 @@ import { useDashboardData } from "@/hooks/useDashboardData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RefreshCw, LogOut, WifiOff } from "lucide-react";
+import { Link } from "react-router-dom";
+import { RefreshCw, LogOut, WifiOff, Settings as SettingsIcon } from "lucide-react";
 import KpiCards from "@/components/dash/KpiCards";
 import WorksTab from "@/components/dash/WorksTab";
 import EstimatesTab from "@/components/dash/EstimatesTab";
@@ -41,6 +42,12 @@ export default function Dashboard() {
             <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
               <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${isFetching ? "animate-spin" : ""}`} />
               Обновить
+            </Button>
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/settings">
+                <SettingsIcon className="mr-1.5 h-3.5 w-3.5" />
+                Доступ
+              </Link>
             </Button>
             <Button variant="ghost" size="sm" onClick={logout}>
               <LogOut className="mr-1.5 h-3.5 w-3.5" />
