@@ -73,10 +73,17 @@ async function fetchCsv(url: string): Promise<Record<string, string>[]> {
   return parseCSV(await res.text());
 }
 
+const SHEET_ID = "1h4H8k-1hidOoo1bguKHoZ-zFeWUZnVf6ST4RNaiY2YM";
+const csvUrl = (gid: string) =>
+  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`;
+
 async function fetchFromSheets(): Promise<DashboardResult | null> {
-  const worksUrl = import.meta.env.VITE_SHEET_WORKS_CSV as string | undefined;
-  const estimatesUrl = import.meta.env.VITE_SHEET_ESTIMATES_CSV as string | undefined;
-  const problemsUrl = import.meta.env.VITE_SHEET_PROBLEMS_CSV as string | undefined;
+  const worksUrl =
+    (import.meta.env.VITE_SHEET_WORKS_CSV as string | undefined) ?? csvUrl("1527393517");
+  const estimatesUrl =
+    (import.meta.env.VITE_SHEET_ESTIMATES_CSV as string | undefined) ?? csvUrl("1999774586");
+  const problemsUrl =
+    (import.meta.env.VITE_SHEET_PROBLEMS_CSV as string | undefined) ?? csvUrl("2062713879");
   if (!worksUrl || !estimatesUrl || !problemsUrl) return null;
 
   const [w, e, p] = await Promise.all([
