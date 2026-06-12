@@ -104,9 +104,9 @@ async function fetchFromApi(): Promise<DashboardResult | null> {
     };
 
     // Either the API already returns typed JSON, or CSV-shaped rows.
-    const rawWorks = Array.isArray(json.works) ? (json.works as Record<string, string>[]) : null;
-    const rawEst = Array.isArray(json.estimates) ? (json.estimates as Record<string, string>[]) : null;
-    const rawProb = Array.isArray(json.problems) ? (json.problems as Record<string, string>[]) : null;
+    const rawWorks = Array.isArray(json.works) ? (json.works as unknown as Record<string, string>[]) : null;
+    const rawEst = Array.isArray(json.estimates) ? (json.estimates as unknown as Record<string, string>[]) : null;
+    const rawProb = Array.isArray(json.problems) ? (json.problems as unknown as Record<string, string>[]) : null;
     if (!rawWorks || !rawEst || !rawProb) return null;
 
     // Detect if already typed (has number fields) — if not, run mappers.
