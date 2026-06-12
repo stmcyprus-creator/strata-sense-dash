@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { DashboardData, WorkStatus } from "@/lib/dashTypes";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatMoney, formatDate } from "@/lib/format";
+import ExportPdfButton from "./ExportPdfButton";
 
 const STATUS_STYLE: Record<WorkStatus, string> = {
   "выполнено": "bg-success/15 text-success",
@@ -16,6 +17,7 @@ export default function WorksTab({ data }: { data: DashboardData }) {
   const [foreman, setForeman] = useState<string>("all");
   const [status, setStatus] = useState<string>("all");
   const [q, setQ] = useState("");
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const objects = useMemo(() => Array.from(new Set(data.works.map((w) => w.объект))).sort(), [data]);
   const foremen = useMemo(() => Array.from(new Set(data.works.map((w) => w.прораб))).sort(), [data]);
@@ -32,9 +34,17 @@ export default function WorksTab({ data }: { data: DashboardData }) {
     [data, obj, foreman, status, q]
   );
 
+  const meta = [
+    `Объект: ${obj === "all" ? "все" : obj}`,
+    `Прораб: ${foreman === "all" ? "все" : foreman}`,
+    `Статус: ${status === "all" ? "все" : status}`,
+    ...(q ? [`Поиск: «${q}»`] : []),
+    `Записей: ${rows.length}`,
+  ];
+
   return (
     <div className="space-y-3">
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
         <Input placeholder="Поиск…" value={q} onChange={(e) => setQ(e.target.value)} />
         <Select value={obj} onValueChange={setObj}>
           <SelectTrigger><SelectValue placeholder="Объект" /></SelectTrigger>
@@ -60,9 +70,17 @@ export default function WorksTab({ data }: { data: DashboardData }) {
             <SelectItem value="проблема">Проблема</SelectItem>
           </SelectContent>
         </Select>
+        <ExportPdfButton
+          targetRef={exportRef}
+          title="Работы"
+          meta={meta}
+          baseFilename="works"
+          orientation="landscape"
+          className="lg:justify-self-end"
+        />
       </div>
 
-      <div className="chart-container overflow-hidden p-0">
+      <div ref={exportRef} className="chart-container overflow-hidden p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-secondary/40 text-xs uppercase tracking-wider text-muted-foreground">
