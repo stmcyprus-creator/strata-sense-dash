@@ -19,8 +19,8 @@ export default function WorksTab({ data }: { data: DashboardData }) {
   const [q, setQ] = useState("");
   const exportRef = useRef<HTMLDivElement>(null);
 
-  const objects = useMemo(() => Array.from(new Set(data.works.map((w) => w.объект))).sort(), [data]);
-  const foremen = useMemo(() => Array.from(new Set(data.works.map((w) => w.прораб))).sort(), [data]);
+  const objects = useMemo(() => Array.from(new Set(data.works.map((w) => w.объект).filter(Boolean))).sort(), [data]);
+  const foremen = useMemo(() => Array.from(new Set(data.works.map((w) => w.прораб).filter(Boolean))).sort(), [data]);
 
   const rows = useMemo(
     () =>
