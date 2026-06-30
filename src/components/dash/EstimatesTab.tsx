@@ -9,7 +9,7 @@ export default function EstimatesTab({ data }: { data: DashboardData }) {
   const exportRef = useRef<HTMLDivElement>(null);
 
   const allObjects = useMemo(
-    () => Array.from(new Set(data.estimates.map((e) => e.объект))).sort(),
+    () => Array.from(new Set(data.estimates.map((e) => e.объект).filter(Boolean))).sort(),
     [data]
   );
 
