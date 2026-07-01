@@ -81,7 +81,33 @@ export default function WorksTab({ data }: { data: DashboardData }) {
       </div>
 
       <div ref={exportRef} className="chart-container overflow-hidden p-0">
-        <div className="overflow-x-auto">
+        {/* Mobile: card list */}
+        <div className="divide-y divide-border/50 md:hidden">
+          {rows.map((w, i) => (
+            <div key={i} className="p-3 space-y-1.5">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold truncate">{w.объект}</div>
+                  <div className="text-xs text-muted-foreground truncate">{w["вид работ"]}</div>
+                </div>
+                <span className={`badge-status shrink-0 ${STATUS_STYLE[w.статус] ?? ""}`}>{w.статус}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground font-mono">{formatDate(w.дата)} · {w.прораб}</span>
+                <span className="font-mono font-medium">{formatMoney(w["сумма факт"])}</span>
+              </div>
+              {w.комментарий && (
+                <p className="text-xs text-muted-foreground">{w.комментарий}</p>
+              )}
+            </div>
+          ))}
+          {rows.length === 0 && (
+            <div className="p-6 text-center text-sm text-muted-foreground">Ничего не найдено</div>
+          )}
+        </div>
+
+        {/* Desktop: table */}
+        <div className="hidden overflow-x-auto md:block">
           <table className="w-full text-sm">
             <thead className="bg-secondary/40 text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
@@ -115,6 +141,7 @@ export default function WorksTab({ data }: { data: DashboardData }) {
           </table>
         </div>
       </div>
+
     </div>
   );
 }
