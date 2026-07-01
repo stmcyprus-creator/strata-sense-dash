@@ -44,8 +44,9 @@ export default function WorksTab({ data }: { data: DashboardData }) {
 
   return (
     <div className="space-y-3">
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-        <Input placeholder="Поиск…" value={q} onChange={(e) => setQ(e.target.value)} />
+      <div className="grid gap-2 grid-cols-2 lg:grid-cols-5">
+        <Input placeholder="Поиск…" value={q} onChange={(e) => setQ(e.target.value)} className="col-span-2 lg:col-span-1" />
+
         <Select value={obj} onValueChange={setObj}>
           <SelectTrigger><SelectValue placeholder="Объект" /></SelectTrigger>
           <SelectContent>
