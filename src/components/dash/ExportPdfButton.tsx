@@ -52,11 +52,13 @@ export default function ExportPdfButton({
       className={className}
     >
       {busy ? (
-        <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+        <Loader2 className="h-3.5 w-3.5 animate-spin sm:mr-1.5" />
       ) : (
-        <FileDown className="mr-1.5 h-3.5 w-3.5" />
+        <FileDown className="h-3.5 w-3.5 sm:mr-1.5" />
       )}
-      {busy ? "Готовлю PDF…" : "Экспорт в PDF"}
+      <span className="hidden sm:inline">{busy ? "Готовлю PDF…" : "Экспорт в PDF"}</span>
+      <span className="sm:hidden">PDF</span>
+
     </Button>
   );
 }

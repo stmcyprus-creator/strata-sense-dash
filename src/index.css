@@ -95,7 +95,7 @@
 
 @layer components {
   .kpi-card {
-    @apply relative overflow-hidden rounded-xl border border-border bg-card p-5;
+    @apply relative overflow-hidden rounded-xl border border-border bg-card p-3 sm:p-5;
     background: var(--gradient-card);
     box-shadow: var(--shadow-card);
     transition: all 0.3s ease;
@@ -124,19 +124,20 @@
   }
 
   .section-title {
-    @apply text-xs font-semibold uppercase tracking-widest text-muted-foreground;
+    @apply text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-muted-foreground;
   }
 
   .value-large {
-    @apply text-3xl font-bold tracking-tight;
+    @apply text-xl sm:text-3xl font-bold tracking-tight;
     font-family: 'JetBrains Mono', monospace;
   }
 
   .chart-container {
-    @apply rounded-xl border border-border bg-card p-5;
+    @apply rounded-xl border border-border bg-card p-3 sm:p-5;
     background: var(--gradient-card);
     box-shadow: var(--shadow-card);
   }
+
 
   .progress-bar {
     @apply h-2 w-full rounded-full bg-secondary overflow-hidden;
