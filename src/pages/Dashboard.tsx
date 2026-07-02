@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,11 @@ import EstimatesTab from "@/components/dash/EstimatesTab";
 import ProblemsTab from "@/components/dash/ProblemsTab";
 import { formatTime } from "@/lib/format";
 
+type TabKey = "works" | "estimates" | "problems";
+
 export default function Dashboard() {
   const { data, isLoading, refetch, isFetching } = useDashboardData();
+  const [tab, setTab] = useState<TabKey>("works");
 
   const logout = () => {
     sessionStorage.removeItem("zd_auth_ok_v1");
