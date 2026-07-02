@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import type { DashboardData, WorkStatus } from "@/lib/dashTypes";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { formatMoney, formatDate } from "@/lib/format";
 import ExportPdfButton from "./ExportPdfButton";
 
@@ -33,6 +34,24 @@ export default function WorksTab({ data }: { data: DashboardData }) {
       }),
     [data, obj, foreman, status, q]
   );
+
+  // Группировка по разделу (виду работ)
+  const groups = useMemo(() => {
+    const map = new Map<string, typeof rows>();
+    for (const r of rows) {
+      const key = r["вид работ"] || "Без раздела";
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(r);
+    }
+    return Array.from(map.entries())
+      .map(([name, items]) => ({
+        name,
+        items,
+        total: items.reduce((s, x) => s + (x["сумма факт"] || 0), 0),
+        problems: items.filter((x) => x.статус === "проблема").length,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name, "ru"));
+  }, [rows]);
 
   const meta = [
     `Объект: ${obj === "all" ? "все" : obj}`,
@@ -81,68 +100,82 @@ export default function WorksTab({ data }: { data: DashboardData }) {
         />
       </div>
 
-      <div ref={exportRef} className="chart-container overflow-hidden p-0">
-        {/* Mobile: card list */}
-        <div className="divide-y divide-border/50 md:hidden">
-          {rows.map((w, i) => (
-            <div key={i} className="p-3 space-y-1.5">
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold truncate">{w.объект}</div>
-                  <div className="text-xs text-muted-foreground truncate">{w["вид работ"]}</div>
-                </div>
-                <span className={`badge-status shrink-0 ${STATUS_STYLE[w.статус] ?? ""}`}>{w.статус}</span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground font-mono">{formatDate(w.дата)} · {w.прораб}</span>
-                <span className="font-mono font-medium">{formatMoney(w["сумма факт"])}</span>
-              </div>
-              {w.комментарий && (
-                <p className="text-xs text-muted-foreground">{w.комментарий}</p>
-              )}
-            </div>
-          ))}
-          {rows.length === 0 && (
-            <div className="p-6 text-center text-sm text-muted-foreground">Ничего не найдено</div>
-          )}
-        </div>
+      <div ref={exportRef} className="chart-container p-2 sm:p-3">
+        {groups.length === 0 ? (
+          <div className="p-6 text-center text-sm text-muted-foreground">Ничего не найдено</div>
+        ) : (
+          <Accordion type="multiple" className="w-full">
+            {groups.map((g) => (
+              <AccordionItem key={g.name} value={g.name} className="border-border/50">
+                <AccordionTrigger className="py-3 hover:no-underline">
+                  <div className="flex flex-1 items-center justify-between gap-3 pr-2 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="font-semibold truncate text-left">{g.name}</span>
+                      <span className="badge-status bg-secondary/60 text-muted-foreground shrink-0">{g.items.length}</span>
+                      {g.problems > 0 && (
+                        <span className="badge-status bg-destructive/15 text-destructive shrink-0">!{g.problems}</span>
+                      )}
+                    </div>
+                    <span className="font-mono text-xs sm:text-sm text-muted-foreground shrink-0">
+                      {formatMoney(g.total)}
+                    </span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="pb-2">
+                  {/* Mobile: card list */}
+                  <div className="divide-y divide-border/50 md:hidden">
+                    {g.items.map((w, i) => (
+                      <div key={i} className="py-2.5 space-y-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="text-sm font-medium truncate">{w.объект}</div>
+                          <span className={`badge-status shrink-0 ${STATUS_STYLE[w.статус] ?? ""}`}>{w.статус}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-muted-foreground font-mono">{formatDate(w.дата)} · {w.прораб}</span>
+                          <span className="font-mono font-medium">{formatMoney(w["сумма факт"])}</span>
+                        </div>
+                        {w.комментарий && (
+                          <p className="text-xs text-muted-foreground">{w.комментарий}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
 
-        {/* Desktop: table */}
-        <div className="hidden overflow-x-auto md:block">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/40 text-xs uppercase tracking-wider text-muted-foreground">
-              <tr>
-                <th className="px-3 py-2 text-left font-medium">Дата</th>
-                <th className="px-3 py-2 text-left font-medium">Прораб</th>
-                <th className="px-3 py-2 text-left font-medium">Объект</th>
-                <th className="px-3 py-2 text-left font-medium">Вид работ</th>
-                <th className="px-3 py-2 text-right font-medium">Факт</th>
-                <th className="px-3 py-2 text-left font-medium">Статус</th>
-                <th className="px-3 py-2 text-left font-medium">Комментарий</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((w, i) => (
-                <tr key={i} className="border-t border-border/50 hover:bg-secondary/20">
-                  <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{formatDate(w.дата)}</td>
-                  <td className="px-3 py-2">{w.прораб}</td>
-                  <td className="px-3 py-2">{w.объект}</td>
-                  <td className="px-3 py-2">{w["вид работ"]}</td>
-                  <td className="px-3 py-2 text-right font-mono">{formatMoney(w["сумма факт"])}</td>
-                  <td className="px-3 py-2">
-                    <span className={`badge-status ${STATUS_STYLE[w.статус] ?? ""}`}>{w.статус}</span>
-                  </td>
-                  <td className="px-3 py-2 text-xs text-muted-foreground">{w.комментарий ?? "—"}</td>
-                </tr>
-              ))}
-              {rows.length === 0 && (
-                <tr><td colSpan={7} className="px-3 py-8 text-center text-sm text-muted-foreground">Ничего не найдено</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                  {/* Desktop: table */}
+                  <div className="hidden overflow-x-auto md:block">
+                    <table className="w-full text-sm">
+                      <thead className="bg-secondary/40 text-xs uppercase tracking-wider text-muted-foreground">
+                        <tr>
+                          <th className="px-3 py-2 text-left font-medium">Дата</th>
+                          <th className="px-3 py-2 text-left font-medium">Прораб</th>
+                          <th className="px-3 py-2 text-left font-medium">Объект</th>
+                          <th className="px-3 py-2 text-right font-medium">Факт</th>
+                          <th className="px-3 py-2 text-left font-medium">Статус</th>
+                          <th className="px-3 py-2 text-left font-medium">Комментарий</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {g.items.map((w, i) => (
+                          <tr key={i} className="border-t border-border/50 hover:bg-secondary/20">
+                            <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{formatDate(w.дата)}</td>
+                            <td className="px-3 py-2">{w.прораб}</td>
+                            <td className="px-3 py-2">{w.объект}</td>
+                            <td className="px-3 py-2 text-right font-mono">{formatMoney(w["сумма факт"])}</td>
+                            <td className="px-3 py-2">
+                              <span className={`badge-status ${STATUS_STYLE[w.статус] ?? ""}`}>{w.статус}</span>
+                            </td>
+                            <td className="px-3 py-2 text-xs text-muted-foreground">{w.комментарий ?? "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        )}
       </div>
-
     </div>
   );
 }
