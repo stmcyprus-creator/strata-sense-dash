@@ -3,6 +3,16 @@ import type { DashboardData } from "@/lib/dashTypes";
 import { formatMoney, formatPct } from "@/lib/format";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ExportPdfButton from "./ExportPdfButton";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 export default function EstimatesTab({ data }: { data: DashboardData }) {
   const [obj, setObj] = useState<string>("all");
