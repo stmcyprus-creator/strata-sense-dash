@@ -70,8 +70,8 @@ export default function Dashboard() {
           </div>
         ) : (
           <>
-            <KpiCards data={data.data} />
-            <Tabs defaultValue="works" className="space-y-4">
+            <KpiCards data={data.data} onNavigate={setTab} />
+            <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="space-y-4">
               <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-grid">
                 <TabsTrigger value="works">Работы</TabsTrigger>
                 <TabsTrigger value="estimates">Сметы vs Факт</TabsTrigger>
