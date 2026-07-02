@@ -164,7 +164,10 @@ export default function EstimatesTab({ data }: { data: DashboardData }) {
             Нет данных по выбранному фильтру.
           </div>
         )}
+        </div>
       </div>
     </div>
+  );
+}
   );
 }
