@@ -9,9 +9,10 @@ import KpiCards from "@/components/dash/KpiCards";
 import WorksTab from "@/components/dash/WorksTab";
 import EstimatesTab from "@/components/dash/EstimatesTab";
 import ProblemsTab from "@/components/dash/ProblemsTab";
+import PlanTab from "@/components/dash/PlanTab";
 import { formatTime } from "@/lib/format";
 
-type TabKey = "works" | "estimates" | "problems";
+type TabKey = "works" | "estimates" | "plan" | "problems";
 
 export default function Dashboard() {
   const { data, isLoading, refetch, isFetching } = useDashboardData();
@@ -72,13 +73,15 @@ export default function Dashboard() {
           <>
             <KpiCards data={data.data} onNavigate={setTab} />
             <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-grid">
+              <TabsList className="grid w-full grid-cols-2 sm:w-auto sm:inline-grid sm:grid-cols-4">
                 <TabsTrigger value="works">Работы</TabsTrigger>
                 <TabsTrigger value="estimates">Сметы vs Факт</TabsTrigger>
+                <TabsTrigger value="plan">План-график</TabsTrigger>
                 <TabsTrigger value="problems">Проблемы</TabsTrigger>
               </TabsList>
               <TabsContent value="works"><WorksTab data={data.data} /></TabsContent>
               <TabsContent value="estimates"><EstimatesTab data={data.data} /></TabsContent>
+              <TabsContent value="plan"><PlanTab data={data.data} /></TabsContent>
               <TabsContent value="problems"><ProblemsTab data={data.data} /></TabsContent>
             </Tabs>
           </>
