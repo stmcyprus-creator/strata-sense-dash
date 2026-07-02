@@ -169,5 +169,3 @@ export default function EstimatesTab({ data }: { data: DashboardData }) {
     </div>
   );
 }
-  );
-}
