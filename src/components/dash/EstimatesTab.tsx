@@ -3,6 +3,16 @@ import type { DashboardData } from "@/lib/dashTypes";
 import { formatMoney, formatPct } from "@/lib/format";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ExportPdfButton from "./ExportPdfButton";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 export default function EstimatesTab({ data }: { data: DashboardData }) {
   const [obj, setObj] = useState<string>("all");
@@ -62,7 +72,56 @@ export default function EstimatesTab({ data }: { data: DashboardData }) {
         />
       </div>
 
-      <div ref={exportRef} className="grid gap-3 md:grid-cols-2">
+      <div ref={exportRef} className="space-y-3">
+        {groups.length > 0 && (
+          <div className="chart-container">
+            <div className="flex items-baseline justify-between gap-2">
+              <h3 className="text-sm font-semibold">Освоение бюджета по объектам</h3>
+              <span className="font-mono text-xs text-muted-foreground">
+                {formatMoney(totalActual)} / {formatMoney(totalEstimate)} ·{" "}
+                {formatPct(totalEstimate ? (totalActual / totalEstimate) * 100 : 0)}
+              </span>
+            </div>
+            <div className="mt-3 h-64 sm:h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={groups.map((g) => ({ name: g.объект, Смета: g.estimate, Освоено: g.actual }))}
+                  margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
+                >
+                  <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                    interval={0}
+                    angle={-15}
+                    textAnchor="end"
+                    height={60}
+                  />
+                  <YAxis
+                    tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                    tickFormatter={(v) => (v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}М` : `${(v / 1000).toFixed(0)}к`)}
+                  />
+                  <Tooltip
+                    formatter={(v: number) => formatMoney(v)}
+                    contentStyle={{
+                      background: "hsl(var(--popover))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                    labelStyle={{ color: "hsl(var(--foreground))" }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <Bar dataKey="Смета" fill="hsl(var(--muted-foreground))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Освоено" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        <div className="grid gap-3 md:grid-cols-2">
+
         {groups.map((g) => {
           const pct = g.estimate ? (g.actual / g.estimate) * 100 : 0;
           return (
@@ -105,6 +164,7 @@ export default function EstimatesTab({ data }: { data: DashboardData }) {
             Нет данных по выбранному фильтру.
           </div>
         )}
+        </div>
       </div>
     </div>
   );
